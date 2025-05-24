@@ -22,7 +22,6 @@ public class TextFields implements ActionListener{
     JTextField t2 = new JTextField("name");
     JTextField t3 = new JTextField("arrival");
     JTextField t4 = new JTextField("departure");
-    JTextField t5 = new JTextField("priority");
     static LocalTime simulatedTime = LocalTime.of(6, 0);
 
     TextFields(){
@@ -40,7 +39,6 @@ public class TextFields implements ActionListener{
         t2.setBounds(20,70,100,30);
         t3.setBounds(20,120,100,30);
         t4.setBounds(20,170,100,30);
-        t5.setBounds(20,220,100,30);
         frame.setLayout(null);
         frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,7 +52,6 @@ public class TextFields implements ActionListener{
         frame.add(t2);
         frame.add(t3);
         frame.add(t4);
-        frame.add(t5);
     }
 
     @Override
@@ -67,32 +64,30 @@ public class TextFields implements ActionListener{
             String arrival=t3.getText();
 
             String depart=t4.getText();
-
-            int priority=Integer.parseInt(t5.getText());
-
-
+            Allocation.allocate(new Train(Integer.parseInt(id),name,arrival,depart,"black"));
         }
         if(e.getSource()==platButton){
             int id=Integer.parseInt(t1.getText());
 
             String name =t2.getText();
-
+            Allocation.addPlatform(new Platform(id,name));
         }
         if(e.getSource()==printButton){
             for (Train train : Models.waitingList) {
-//                if(simulatedTime.equals(train.getActualArrival()))
+//                if(simulatedTime.equals(train.getArrivalTime()))
 //                    System.out.println(train.getName() + " arrived"+" Platform:" + train.getPlatformId());
 //                if(simulatedTime.equals(train.getDepartureTime()))
 //                    System.out.println(train.getName() + " departed");
                 System.out.println("Name: "+ train.getName());
                 System.out.println("pid: "+ train.getPlatformId());
-                System.out.println("Arrival: "+ train.getActualArrival());
-                System.out.println("deaprt: "+ train.getActualDeparture());
+                System.out.println("Arrival: "+ train.getArrivalTime());
+                System.out.println("deaprt: "+ train.getDepartureTime());
+                System.out.println("Max platforms"+ Models.MAX);
                 System.out.println();
             }
 
             for (Platform platform : Models.platformHeap) {
-//                if(simulatedTime.equals(train.getActualArrival()))
+//                if(simulatedTime.equals(train.getArrivalTime()))
 //                    System.out.println(train.getName() + " arrived"+" Platform:" + train.getPlatformId());
 //                if(simulatedTime.equals(train.getDepartureTime()))
 //                    System.out.println(train.getName() + " departed");
@@ -109,6 +104,7 @@ public class TextFields implements ActionListener{
                 if(id==trains.getId())
                     train=trains;
             }
+            Delete.deleteTrain(train);
         }
         if(e.getSource()==deletePlat){
             int id=Integer.parseInt(t1.getText());
@@ -117,6 +113,7 @@ public class TextFields implements ActionListener{
                 if(id==p1.getId())
                     platform=p1;
             }
+            Delete.deletePlatform(platform);
         }
     }
 
@@ -132,18 +129,25 @@ public class TextFields implements ActionListener{
             System.out.println("Current Time: " + simulatedTime);
             for (int i=0;i<Models.waitingList.size();i++) {
                 Train train =Models.waitingList.get(i);
-                if(simulatedTime.equals(train.getActualArrival())){
+                if(simulatedTime.equals(train.getArrivalTime())){
+                    if(train.getPlatformId()==0)
+                    {
+                        System.out.println("No platform has been allocared removing it ");
+                        System.out.println();
+                        Models.waitingList.remove(train);
+                        continue;
+                    }
                     System.out.println(train.getName() + " arrived"+" Platform:" + train.getPlatformId());
-                    Models.addProcessedTrain(train);
+                    Models.processedList.add(train);
                     Models.waitingList.remove(train);
                     i--;
                 }
             }
             for(int i=0;i<Models.processedList.size();i++){
                 Train train =Models.processedList.get(i);
-                if(simulatedTime.equals(train.getActualDeparture())){
+                if(simulatedTime.equals(train.getDepartureTime())){
                     System.out.println(train.getName() + " Departed"+" Platform:" + train.getPlatformId());
-                    Models.removeProcessedTrain(train);
+                    Models.processedList.remove(train);
                     i--;
                 }
             }

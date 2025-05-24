@@ -8,6 +8,7 @@ public class Allocation {
     public static void allocate(Train train) {
         Platform p = platformHeap.peek();
         waitingList.add(train);
+        waitingList.sort(Comparator.comparing(Train::getArrivalTime));
         if (waitingList.get(waitingList.size() - 1).getId() == train.getId()) {
             if (p.getNextFree().isBefore(train.getArrivalTime())) {
                 platformHeap.poll();
