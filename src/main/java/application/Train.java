@@ -8,21 +8,15 @@ public class Train {
     private LocalTime departureTime;
     private int platformId;
     private String color;
-    private int priority;
-    private LocalTime actualArrival;
-    private LocalTime actualDeparture;
     DateTimeFormatter formatter= DateTimeFormatter.ofPattern("HH:mm");
     public Train(int id, String name, String arrivalTime, String departureTime,
-                 String color, int priority) {
+                 String color) {
         this.id = id;
         this.name = name;
         this.arrivalTime = LocalTime.parse(arrivalTime,formatter);
         this.departureTime = LocalTime.parse(departureTime,formatter);
         this.platformId = 0;
         this.color = color;
-        this.priority = priority;
-        this.actualArrival = LocalTime.of(0,0);
-        this.actualDeparture = LocalTime.of(0,0);
     }
 
     // Getters
@@ -49,19 +43,6 @@ public class Train {
     public String getColor() {
         return color;
     }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public LocalTime getActualArrival() {
-        return actualArrival;
-    }
-
-    public LocalTime getActualDeparture() {
-        return actualDeparture;
-    }
-
     // Setters
     public void setId(int id) {
         this.id = id;
@@ -87,20 +68,8 @@ public class Train {
         this.color = color;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public void setActualArrival(LocalTime actualArrival) {
-        this.actualArrival = actualArrival;
-    }
-
-    public void setActualDeparture(LocalTime actualDeparture) {
-        this.actualDeparture = actualDeparture;
-    }
     public String toString() {
-        return String.format("Train{id=%d, name='%s', arrivalTime='%s', departureTime='%s', actualArrival='%s', actualDeparture='%s', color='%s', priority=%d}",
-                id, name, arrivalTime.format(formatter), departureTime.format(formatter),
-                actualArrival.format(formatter), actualDeparture.format(formatter), color, priority);
+        return String.format("Train{id=%d, name='%s', arrivalTime='%s', departureTime='%s', color='%s'}",
+                id, name, arrivalTime.format(formatter), departureTime.format(formatter),color);
     }
 }
