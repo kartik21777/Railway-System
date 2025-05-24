@@ -52,11 +52,26 @@ public class Delete {
             Train t = processedList.get(i);
             if (t.getId() == train.getId()) {
                 f++;
+                for(Platform plat: platformHeap)
+                {
+                    if(plat.getId()==train.getId())
+                    {
+                        plat.setNextFree(train.getDepartureTime());
+                    }
+                }
             }
         }
         if(f==0)
         {
             train.setDepartureTime(LocalTime.of(0,0));
+            for(Platform plat: platformHeap)
+            {
+                if(plat.getId()==train.getId())
+                {
+                    plat.setNextFree(LocalTime.of(0,0));
+                }
+            }
+            waitingList.remove(train);
         }
 
         return train;
