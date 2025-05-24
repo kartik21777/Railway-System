@@ -38,9 +38,9 @@ public class Models {
     }
     public static void reset(List<Train> tail)
     {
-        int f = 0;
         for(int i = 1;i<tail.size();++i)
         {
+            int f = 0;
             Train t = tail.get(i);
             for(Platform p: platformHeap)
             {
