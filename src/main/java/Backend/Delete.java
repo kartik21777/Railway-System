@@ -41,7 +41,7 @@ public class Delete {
         for(int i = 0;i<waitingList.size();++i) {
             Train t = waitingList.get(i);
             if (t.getPlatformId() == plat.getId()) {
-                Allocation.allocate(t,plat);
+                Allocation.allocate(t);
             }
         }
         return plat;

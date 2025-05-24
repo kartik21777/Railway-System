@@ -1,40 +1,52 @@
 package Backend;
 import application.*;
 import java.time.LocalTime;
+import java.util.Arrays;
 import static Backend.Models.*;
+import java.util.*;
 public class Allocation {
-    public static void allocate(Train train, Platform plat){
+    public static void allocate(Train train) {
         Platform p = platformHeap.peek();
-        if(p.getNextFree().isBefore(train.getArrivalTime()))
-        {
-            platformHeap.poll();
-            p.setNextFree(train.getDepartureTime());
-            train.setPlatformId(p.getId());
-            platformHeap.add(p);
+        waitingList.add(train);
+        if (waitingList.get(waitingList.size() - 1).getId() == train.getId()) {
+            if (p.getNextFree().isBefore(train.getArrivalTime())) {
+                platformHeap.poll();
+                p.setNextFree(train.getDepartureTime());
+                train.setPlatformId(p.getId());
+                platformHeap.add(p);
+            } else {
+                train.setPlatformId(0);
+            }
+        } else {
+            int idx = Models.waitingList.indexOf(train);
+            List<Train> head = new ArrayList<>(Models.waitingList.subList(0, idx));
+            List<Train> tail = new ArrayList<>(Models.waitingList.subList(idx, Models.waitingList.size()));
+            reset(tail);
+            waitingList.clear();
+            waitingList.addAll(head);
+            waitingList.addAll(tail);
         }
-        else if(MIN<MAX)
-        {
-            MIN++;
-            plat.setNextFree(train.getDepartureTime());
-            train.setPlatformId(plat.getId());
-            platformHeap.add(plat);
+        int n = waitingList.size();
+        LocalTime[] arr = new LocalTime[n];
+        LocalTime[] dep = new LocalTime[n];
+        for (int i = 0; i < n; ++i) {
+            Train t = waitingList.get(i);
+            arr[i] = t.getArrivalTime();
+            dep[i] = t.getDepartureTime();
         }
-        else
-        {
-            System.out.println("No platform available");
-            waitingList.remove(train);
-        }
+        MAX = MinPlatform(arr, dep);
     }
-    public static void addPlatform(Platform platform, LocalTime now){
-        if(MIN<MAX)
+    public static void addPlatform(Platform platform){
+        for(int i = 0;i<waitingList.size();++i)
         {
-            platform.setNextFree(now);
-            platformHeap.add(platform);
-            MIN++;
+            Train train = waitingList.get(i);
+            if(train.getPlatformId()==0)
+            {
+                platform.setNextFree(train.getDepartureTime());
+                train.setPlatformId(platform.getId());
+                break;
+            }
         }
-        else
-        {
-            System.out.println("Cannot add more platforms");
-        }
+        platformHeap.add(platform);
     }
 }
