@@ -2,6 +2,7 @@ package Backend;
 import application.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static Backend.Models.*;
@@ -60,7 +61,6 @@ public class Delete {
             if(t.getId()==train.getId())
             {
                 f++;
-                waitingList.remove(t);
                 break;
             }
         }
@@ -81,16 +81,15 @@ public class Delete {
                     break;
                 }
             }
-            for(int i = 0;i<waitingList.size();++i)
-            {
-                Train t = waitingList.get(i);
-                Platform plat = platformHeap.peek();
-                if(plat.getNextFree().isBefore(t.getArrivalTime()))
-                {
-                    plat.setNextFree(t.getDepartureTime());
-                    t.setPlatformId(plat.getId());
-                }
-            }
+            int idx = Models.waitingList.indexOf(train);
+            waitingList.remove(train);
+            waitingList.sort(Comparator.comparing(Train::getArrivalTime));
+            List<Train> head = new ArrayList<>(Models.waitingList.subList(0, idx));
+            List<Train> tail = new ArrayList<>(Models.waitingList.subList(idx, Models.waitingList.size()));
+            reset(tail);
+            waitingList.clear();
+            waitingList.addAll(head);
+            waitingList.addAll(tail);
         }
         int n = waitingList.size();
         LocalTime[] arr = new LocalTime[n];
