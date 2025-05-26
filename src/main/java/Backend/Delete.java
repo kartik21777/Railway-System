@@ -77,7 +77,7 @@ public class Delete {
             waitingList.sort(Comparator.comparing(Train::getArrivalTime));
             List<Train> head = new ArrayList<>(Models.waitingList.subList(0, idx));
             List<Train> tail = new ArrayList<>(Models.waitingList.subList(idx, Models.waitingList.size()));
-            delresettrain(head,tail,train);
+            delresettrain(head,tail);
             waitingList.clear();
             waitingList.addAll(head);
             waitingList.addAll(tail);
