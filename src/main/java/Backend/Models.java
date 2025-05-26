@@ -1,18 +1,16 @@
 package Backend;
-import java.time.Duration;
+
 import java.time.LocalTime;
 import java.util.PriorityQueue;
 import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import application.Platform;
 import application.Train;
 import java.util.Arrays;
 
 public class Models {
-    public static int MIN;
     public static PriorityQueue<Platform> platformHeap;
     public static List<Train> waitingList;
     public static List<Train> processedList;

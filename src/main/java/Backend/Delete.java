@@ -11,7 +11,7 @@ public class Delete {
         int f = 0;
         if(platformHeap.size()==0)
         {
-            System.out.println("No platform availabe");
+            System.out.println("No platform available");
             return null;
         }
         for(int i = 0;i<processedList.size();++i)
