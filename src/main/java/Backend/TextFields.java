@@ -77,7 +77,7 @@ public class TextFields implements ActionListener{
                 System.out.println("pid: "+ train.getPlatformId());
                 System.out.println("Arrival: "+ train.getArrivalTime());
                 System.out.println("deaprt: "+ train.getDepartureTime());
-                System.out.println("Max platforms"+ Models.MAX);
+                System.out.println("Min platforms"+ Models.MAX);
                 System.out.println();
             }
 
@@ -108,7 +108,10 @@ public class TextFields implements ActionListener{
                 if(id==p1.getId())
                     platform=p1;
             }
-            Delete.deletePlatform(platform);
+            if(!(platform==null))
+                Delete.deletePlatform(platform);
+            else
+                System.out.println("Platform not present");
         }
     }
 
