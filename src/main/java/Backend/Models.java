@@ -1,15 +1,10 @@
 package Backend;
-import java.time.Duration;
+
 import java.time.LocalTime;
-import java.util.PriorityQueue;
-import java.util.Comparator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import application.Platform;
 import application.Train;
-import java.util.Arrays;
 
 public class Models {
     public static int MIN;
@@ -41,42 +36,50 @@ public class Models {
         for(int i = 0; i<processedList.size();++i)
         {
             Train t = processedList.get(i);
-            for(Platform p: platformHeap)
+            Iterator<Platform> iterator = platformHeap.iterator();
+            while(iterator.hasNext())
             {
+                Platform p = iterator.next();
                 if(p.getId()==t.getPlatformId())
                 {
-                    platformHeap.remove(p);
+                    iterator.remove();
                     p.setNextFree(t.getDepartureTime());
                     platformHeap.add(p);
                     p.setF(1);
+                    break;
                 }
             }
         }
         for(int i = 0;i<head.size();++i)
         {
             Train t = head.get(i);
-            for(Platform p: platformHeap)
+            Iterator<Platform> iterator = platformHeap.iterator();
+            while(iterator.hasNext())
             {
+                Platform p = iterator.next();
                 if(p.getId()==t.getPlatformId())
                 {
-                    platformHeap.remove(p);
+                    iterator.remove();
                     p.setNextFree(t.getDepartureTime());
                     platformHeap.add(p);
                     p.setF(1);
+                    break;
                 }
             }
         }
         for(int i = 1;i<tail.size();++i)
         {
             Train t = tail.get(i);
-            for(Platform p: platformHeap)
+            Iterator<Platform> iterator = platformHeap.iterator();
+            while(iterator.hasNext())
             {
+                Platform p = iterator.next();
+                t.setPlatformId(0);
                 if(p.getId()==t.getPlatformId()&&p.getF()==0)
                 {
-                    platformHeap.remove(p);
+                    iterator.remove();
                     p.setNextFree(LocalTime.of(0,0));
                     platformHeap.add(p);
-                    t.setPlatformId(0);
                     break;
                 }
             }
@@ -89,7 +92,7 @@ public class Models {
         {
             Platform p = platformHeap.peek();
             Train t = tail.get(i);
-            if(p.getNextFree().isBefore(t.getArrivalTime()))
+            if(!p.getNextFree().isAfter(t.getArrivalTime()))
             {
                 platformHeap.poll();
                 p.setNextFree(t.getDepartureTime());
@@ -106,45 +109,52 @@ public class Models {
                 if(train.getPlatformId()==plat.getId())
                 {
                     train.setPlatformId(0);
-                    continue;
                 }
             }
             for(int i = 0; i<processedList.size();++i)
             {
                 Train t = processedList.get(i);
-                for(Platform p: platformHeap)
+                Iterator<Platform> iterator = platformHeap.iterator();
+                while(iterator.hasNext())
                 {
+                    Platform p = iterator.next();
                     if(p.getId()==t.getPlatformId()&&plat.getId()!=p.getId())
                     {
-                        platformHeap.remove(p);
+                        iterator.remove();
                         p.setNextFree(t.getDepartureTime());
                         platformHeap.add(p);
                         p.setF(1);
+                        break;
                     }
                 }
             }
             for(int i = 0;i<head.size();++i)
             {
                 Train t = head.get(i);
-                for(Platform p: platformHeap)
+                Iterator<Platform> iterator = platformHeap.iterator();
+                while(iterator.hasNext())
                 {
+                    Platform p = iterator.next();
                     if(p.getId()==t.getPlatformId())
                     {
-                        platformHeap.remove(p);
+                        iterator.remove();
                         p.setNextFree(t.getDepartureTime());
                         platformHeap.add(p);
                         p.setF(1);
+                        break;
                     }
                 }
             }
             for(int i = 1;i<tail.size();++i)
             {
                 Train t = tail.get(i);
-                for(Platform p: platformHeap)
+                Iterator<Platform> iterator = platformHeap.iterator();
+                while(iterator.hasNext())
                 {
+                    Platform p = iterator.next();
                     if(p.getId()==t.getPlatformId()&&p.getF()==0)
                     {
-                        platformHeap.remove(p);
+                        iterator.remove();
                         p.setNextFree(LocalTime.of(0,0));
                         platformHeap.add(p);
                         t.setPlatformId(0);
@@ -160,7 +170,7 @@ public class Models {
             {
                 Platform p = platformHeap.peek();
                 Train t = tail.get(i);
-                if(p.getNextFree().isBefore(t.getArrivalTime()))
+                if(!p.getNextFree().isAfter(t.getArrivalTime()))
                 {
                     platformHeap.poll();
                     p.setNextFree(t.getDepartureTime());
@@ -175,39 +185,45 @@ public class Models {
         for(int i = 0; i<processedList.size();++i)
         {
             Train t = processedList.get(i);
-            for(Platform p: platformHeap)
-            {
-                if(p.getId()==t.getPlatformId())
-                {
-                    platformHeap.remove(p);
+            Iterator<Platform> iterator = platformHeap.iterator();
+            while (iterator.hasNext()) {
+                Platform p = iterator.next();
+                if (p.getId() == t.getPlatformId()) {
+                    iterator.remove();
                     p.setNextFree(t.getDepartureTime());
-                    platformHeap.add(p);
                     p.setF(1);
+                    platformHeap.add(p);
+                    break;
                 }
             }
         }
         for(int i = 0;i<head.size();++i)
         {
             Train t = head.get(i);
-            for(Platform p: platformHeap)
+            Iterator<Platform> iterator = platformHeap.iterator();
+            while(iterator.hasNext())
             {
+                Platform p =  iterator.next();
                 if(p.getId()==t.getPlatformId())
                 {
-                    platformHeap.remove(p);
+                    iterator.remove();
                     p.setNextFree(t.getDepartureTime());
                     platformHeap.add(p);
                     p.setF(1);
+                    break;
                 }
             }
         }
         for(int i = 0;i<tail.size();++i)
         {
             Train t = tail.get(i);
-            for(Platform p: platformHeap)
+            Iterator<Platform> iterator = platformHeap.iterator();
+            while(iterator.hasNext())
             {
+                Platform p = iterator.next();
                 if(p.getId()==t.getPlatformId()&&p.getF()==0)
                 {
-                    platformHeap.remove(p);
+                    iterator.remove();
                     p.setNextFree(LocalTime.of(0,0));
                     platformHeap.add(p);
                     t.setPlatformId(0);
@@ -223,7 +239,7 @@ public class Models {
         {
             Platform p = platformHeap.peek();
             Train t = tail.get(i);
-            if(p.getNextFree().isBefore(t.getArrivalTime()))
+            if(!p.getNextFree().isAfter(t.getArrivalTime()))
             {
                 platformHeap.poll();
                 p.setNextFree(t.getDepartureTime());
@@ -238,7 +254,7 @@ public class Models {
             Arrays.sort(dep, Comparator.naturalOrder());
             int platforms = 1, result = 1, i = 1, j = 0;
             while (i < arr.length && j < dep.length) {
-                if (!arr[i].isAfter(dep[j])) {
+                if (arr[i].isBefore(dep[j])) {
                     platforms++;
                     i++;
                 } else {
