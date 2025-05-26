@@ -37,8 +37,5 @@ public class Platform {
     public void setNextFree(LocalTime nextFree) {
         this.nextFree = nextFree;
     }
-    public String toString() {
-        return String.format("Platform{id=%d, name='%s', nextFree='%s'}",
-                id, platformName, nextFree.format(formatter));
-    }
+
 }

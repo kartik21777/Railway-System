@@ -68,8 +68,5 @@ public class Train {
         this.color = color;
     }
 
-    public String toString() {
-        return String.format("Train{id=%d, name='%s', arrivalTime='%s', departureTime='%s', color='%s'}",
-                id, name, arrivalTime.format(formatter), departureTime.format(formatter),color);
-    }
+
 }
