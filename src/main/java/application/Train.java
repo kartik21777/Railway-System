@@ -44,22 +44,6 @@ public class Train {
         return color;
     }
     // Setters
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setArrivalTime(LocalTime arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
-    public void setDepartureTime(LocalTime departureTime) {
-        this.departureTime = departureTime;
-    }
-
     public void setPlatformId(int platformId) {
         this.platformId = platformId;
     }

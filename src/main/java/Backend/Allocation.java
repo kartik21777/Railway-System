@@ -1,7 +1,6 @@
 package Backend;
 import application.*;
 import java.time.LocalTime;
-import java.util.Arrays;
 import static Backend.Models.*;
 import java.util.*;
 public class Allocation {
@@ -10,7 +9,7 @@ public class Allocation {
         waitingList.add(train);
         waitingList.sort(Comparator.comparing(Train::getArrivalTime));
         if (waitingList.get(waitingList.size() - 1).getId() == train.getId()) {
-            if (p.getNextFree().isBefore(train.getArrivalTime())) {
+            if (!p.getNextFree().isAfter(train.getArrivalTime())) {
                 platformHeap.poll();
                 p.setNextFree(train.getDepartureTime());
                 train.setPlatformId(p.getId());
