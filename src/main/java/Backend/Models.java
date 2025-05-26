@@ -170,14 +170,14 @@ public class Models {
             }
 
         }
-    public static void delresettrain(List<Train> head, List<Train> tail, Platform plat)
+    public static void delresettrain(List<Train> head, List<Train> tail)
     {
         for(int i = 0; i<processedList.size();++i)
         {
             Train t = processedList.get(i);
             for(Platform p: platformHeap)
             {
-                if(p.getId()==t.getPlatformId()&&plat.getId()!=p.getId())
+                if(p.getId()==t.getPlatformId())
                 {
                     platformHeap.remove(p);
                     p.setNextFree(t.getDepartureTime());
