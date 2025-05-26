@@ -36,7 +36,7 @@ public class Delete {
                 int idx = Models.waitingList.indexOf(t);
                 List<Train> head = new ArrayList<>(Models.waitingList.subList(0, idx));
                 List<Train> tail = new ArrayList<>(Models.waitingList.subList(idx, Models.waitingList.size()));
-                reset(tail);
+                delreset(head,tail,plat);
                 waitingList.clear();
                 waitingList.addAll(head);
                 waitingList.addAll(tail);
@@ -47,6 +47,7 @@ public class Delete {
     }
     public static Train deleteTrain(Train train) {
         int f = 0;
+        int idx = -1;
         for(int i= 0;i<processedList.size();++i)
         {
             if(processedList.get(i).getId()==train.getId())
@@ -60,7 +61,9 @@ public class Delete {
             Train t = waitingList.get(i);
             if(t.getId()==train.getId())
             {
+                idx = i;
                 f++;
+                waitingList.remove(train);
                 break;
             }
         }
@@ -71,22 +74,10 @@ public class Delete {
         }
         if(train.getPlatformId()!=0)
         {
-            for(Platform plat:platformHeap)
-            {
-                if(plat.getId()==train.getPlatformId())
-                {
-                    platformHeap.remove(plat);
-                    plat.setNextFree(LocalTime.of(0,0));
-                    platformHeap.add(plat);
-                    break;
-                }
-            }
-            int idx = Models.waitingList.indexOf(train);
-            waitingList.remove(train);
             waitingList.sort(Comparator.comparing(Train::getArrivalTime));
             List<Train> head = new ArrayList<>(Models.waitingList.subList(0, idx));
             List<Train> tail = new ArrayList<>(Models.waitingList.subList(idx, Models.waitingList.size()));
-            reset(tail);
+            delresettrain(head,tail,train);
             waitingList.clear();
             waitingList.addAll(head);
             waitingList.addAll(tail);

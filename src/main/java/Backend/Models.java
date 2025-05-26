@@ -36,28 +36,54 @@ public class Models {
                 .comparing(Train::getArrivalTime)
         );
     }
-    public static void reset(List<Train> tail)
+    public static void reset(List<Train> head, List<Train> tail)
     {
-        for(int i = 1;i<tail.size();++i)
+        for(int i = 0; i<processedList.size();++i)
         {
-            int f = 0;
-            Train t = tail.get(i);
+            Train t = processedList.get(i);
             for(Platform p: platformHeap)
             {
                 if(p.getId()==t.getPlatformId())
                 {
                     platformHeap.remove(p);
+                    p.setNextFree(t.getDepartureTime());
+                    platformHeap.add(p);
+                    p.setF(1);
+                }
+            }
+        }
+        for(int i = 0;i<head.size();++i)
+        {
+            Train t = head.get(i);
+            for(Platform p: platformHeap)
+            {
+                if(p.getId()==t.getPlatformId())
+                {
+                    platformHeap.remove(p);
+                    p.setNextFree(t.getDepartureTime());
+                    platformHeap.add(p);
+                    p.setF(1);
+                }
+            }
+        }
+        for(int i = 1;i<tail.size();++i)
+        {
+            Train t = tail.get(i);
+            for(Platform p: platformHeap)
+            {
+                if(p.getId()==t.getPlatformId()&&p.getF()==0)
+                {
+                    platformHeap.remove(p);
                     p.setNextFree(LocalTime.of(0,0));
                     platformHeap.add(p);
                     t.setPlatformId(0);
-                    f++;
                     break;
                 }
             }
-            if(f==0)
-            {
-                break;
-            }
+        }
+        for(Platform p: platformHeap)
+        {
+            p.setF(0);
         }
         for(int i = 0;i<tail.size();++i)
         {
@@ -72,9 +98,142 @@ public class Models {
             }
         }
     }
+        public static void delreset(List<Train> head, List<Train> tail, Platform plat)
+        {
+            for(int i = 0;i<waitingList.size();++i)
+            {
+                Train train = waitingList.get(i);
+                if(train.getPlatformId()==plat.getId())
+                {
+                    train.setPlatformId(0);
+                    continue;
+                }
+            }
+            for(int i = 0; i<processedList.size();++i)
+            {
+                Train t = processedList.get(i);
+                for(Platform p: platformHeap)
+                {
+                    if(p.getId()==t.getPlatformId()&&plat.getId()!=p.getId())
+                    {
+                        platformHeap.remove(p);
+                        p.setNextFree(t.getDepartureTime());
+                        platformHeap.add(p);
+                        p.setF(1);
+                    }
+                }
+            }
+            for(int i = 0;i<head.size();++i)
+            {
+                Train t = head.get(i);
+                for(Platform p: platformHeap)
+                {
+                    if(p.getId()==t.getPlatformId())
+                    {
+                        platformHeap.remove(p);
+                        p.setNextFree(t.getDepartureTime());
+                        platformHeap.add(p);
+                        p.setF(1);
+                    }
+                }
+            }
+            for(int i = 1;i<tail.size();++i)
+            {
+                Train t = tail.get(i);
+                for(Platform p: platformHeap)
+                {
+                    if(p.getId()==t.getPlatformId()&&p.getF()==0)
+                    {
+                        platformHeap.remove(p);
+                        p.setNextFree(LocalTime.of(0,0));
+                        platformHeap.add(p);
+                        t.setPlatformId(0);
+                        break;
+                    }
+                }
+            }
+            for(Platform p: platformHeap)
+            {
+                p.setF(0);
+            }
+            for(int i = 0;i<tail.size();++i)
+            {
+                Platform p = platformHeap.peek();
+                Train t = tail.get(i);
+                if(p.getNextFree().isBefore(t.getArrivalTime()))
+                {
+                    platformHeap.poll();
+                    p.setNextFree(t.getDepartureTime());
+                    t.setPlatformId(p.getId());
+                    platformHeap.add(p);
+                }
+            }
 
+        }
+    public static void delresettrain(List<Train> head, List<Train> tail, Platform plat)
+    {
+        for(int i = 0; i<processedList.size();++i)
+        {
+            Train t = processedList.get(i);
+            for(Platform p: platformHeap)
+            {
+                if(p.getId()==t.getPlatformId()&&plat.getId()!=p.getId())
+                {
+                    platformHeap.remove(p);
+                    p.setNextFree(t.getDepartureTime());
+                    platformHeap.add(p);
+                    p.setF(1);
+                }
+            }
+        }
+        for(int i = 0;i<head.size();++i)
+        {
+            Train t = head.get(i);
+            for(Platform p: platformHeap)
+            {
+                if(p.getId()==t.getPlatformId())
+                {
+                    platformHeap.remove(p);
+                    p.setNextFree(t.getDepartureTime());
+                    platformHeap.add(p);
+                    p.setF(1);
+                }
+            }
+        }
+        for(int i = 0;i<tail.size();++i)
+        {
+            Train t = tail.get(i);
+            for(Platform p: platformHeap)
+            {
+                if(p.getId()==t.getPlatformId()&&p.getF()==0)
+                {
+                    platformHeap.remove(p);
+                    p.setNextFree(LocalTime.of(0,0));
+                    platformHeap.add(p);
+                    t.setPlatformId(0);
+                    break;
+                }
+            }
+        }
+        for(Platform p: platformHeap)
+        {
+            p.setF(0);
+        }
+        for(int i = 0;i<tail.size();++i)
+        {
+            Platform p = platformHeap.peek();
+            Train t = tail.get(i);
+            if(p.getNextFree().isBefore(t.getArrivalTime()))
+            {
+                platformHeap.poll();
+                p.setNextFree(t.getDepartureTime());
+                t.setPlatformId(p.getId());
+                platformHeap.add(p);
+            }
+        }
 
-        public static int MinPlatform(LocalTime[] arr, LocalTime[] dep) {
+    }
+    public static int MinPlatform(LocalTime[] arr, LocalTime[] dep) {
             Arrays.sort(arr, Comparator.naturalOrder());
             Arrays.sort(dep, Comparator.naturalOrder());
             int platforms = 1, result = 1, i = 1, j = 0;

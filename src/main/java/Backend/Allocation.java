@@ -22,7 +22,7 @@ public class Allocation {
             int idx = Models.waitingList.indexOf(train);
             List<Train> head = new ArrayList<>(Models.waitingList.subList(0, idx));
             List<Train> tail = new ArrayList<>(Models.waitingList.subList(idx, Models.waitingList.size()));
-            reset(tail);
+            reset(head,tail);
             waitingList.clear();
             waitingList.addAll(head);
             waitingList.addAll(tail);
