@@ -72,12 +72,13 @@ public class Delete {
             System.out.println("No such train is there");
             return null;
         }
+        int plat_id = train.getPlatformId();
         if(train.getPlatformId()!=0)
         {
             waitingList.sort(Comparator.comparing(Train::getArrivalTime));
             List<Train> head = new ArrayList<>(Models.waitingList.subList(0, idx));
             List<Train> tail = new ArrayList<>(Models.waitingList.subList(idx, Models.waitingList.size()));
-            delresettrain(head,tail);
+            delresettrain(head,tail,plat_id);
             waitingList.clear();
             waitingList.addAll(head);
             waitingList.addAll(tail);

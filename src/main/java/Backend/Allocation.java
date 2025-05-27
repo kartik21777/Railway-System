@@ -5,19 +5,18 @@ import static Backend.Models.*;
 import java.util.*;
 public class Allocation {
     public static void allocate(Train train) {
-        Platform p = platformHeap.peek();
         waitingList.add(train);
         waitingList.sort(Comparator.comparing(Train::getArrivalTime));
         if (waitingList.get(waitingList.size() - 1).getId() == train.getId()) {
-            if (!p.getNextFree().isAfter(train.getArrivalTime())) {
-                platformHeap.poll();
-                p.setNextFree(train.getDepartureTime());
-                train.setPlatformId(p.getId());
-                platformHeap.add(p);
-            } else {
-                train.setPlatformId(0);
+            for(int i=0;i<platformList.size();i++){
+                if(!platformList.get(i).getNextFree().isAfter(train.getArrivalTime())){
+                    train.setPlatformId(platformList.get(i).getId());
+                    platformList.get(i).setNextFree(train.getDepartureTime());
+                    break;
+                }
             }
-        } else {
+        }
+        else {
             int idx = Models.waitingList.indexOf(train);
             List<Train> head = new ArrayList<>(Models.waitingList.subList(0, idx));
             List<Train> tail = new ArrayList<>(Models.waitingList.subList(idx, Models.waitingList.size()));
@@ -26,6 +25,29 @@ public class Allocation {
             waitingList.addAll(head);
             waitingList.addAll(tail);
         }
+
+
+//        Platform p = platformHeap.peek();
+//        waitingList.add(train);
+//        waitingList.sort(Comparator.comparing(Train::getArrivalTime));
+//        if (waitingList.get(waitingList.size() - 1).getId() == train.getId()) {
+//            if (!p.getNextFree().isAfter(train.getArrivalTime())) {
+//                platformHeap.poll();
+//                p.setNextFree(train.getDepartureTime());
+//                train.setPlatformId(p.getId());
+//                platformHeap.add(p);
+//            } else {
+//                train.setPlatformId(0);
+//            }
+//        } else {
+//            int idx = Models.waitingList.indexOf(train);
+//            List<Train> head = new ArrayList<>(Models.waitingList.subList(0, idx));
+//            List<Train> tail = new ArrayList<>(Models.waitingList.subList(idx, Models.waitingList.size()));
+//            reset(head,tail);
+//            waitingList.clear();
+//            waitingList.addAll(head);
+//            waitingList.addAll(tail);
+//        }
         int n = waitingList.size();
         LocalTime[] arr = new LocalTime[n];
         LocalTime[] dep = new LocalTime[n];
@@ -46,6 +68,6 @@ public class Allocation {
                 train.setPlatformId(platform.getId());
             }
         }
-        platformHeap.add(platform);
+        platformList.add(platform);
     }
 }
