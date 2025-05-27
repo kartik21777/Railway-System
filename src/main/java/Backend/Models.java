@@ -71,13 +71,13 @@ public class Models {
             for(int j=0;j<platformList.size();j++)
             {
                 Platform p = platformList.get(j);
-                t.setPlatformId(0);
                 if(p.getId()==t.getPlatformId()&&p.getF()==0)
                 {
                     p.setNextFree(LocalTime.of(0,0));
                     break;
                 }
             }
+            t.setPlatformId(0);
         }
 
         for(Platform p: platformList)
@@ -87,7 +87,6 @@ public class Models {
 
         for(int i = 0;i<tail.size();++i)
         {
-            Platform p = platformHeap.peek();
             Train train = tail.get(i);
 
             for(int j = 0; j <platformList.size(); j++){
@@ -109,6 +108,7 @@ public class Models {
                     train.setPlatformId(0);
                 }
             }
+
             for(int i = 0; i<processedList.size();++i)
             {
                 Train t = processedList.get(i);
@@ -123,6 +123,7 @@ public class Models {
                     }
                 }
             }
+
             for(int i = 0;i<head.size();++i)
             {
                 Train t = head.get(i);
@@ -137,38 +138,39 @@ public class Models {
                     }
                 }
             }
+
             for(int i = 1;i<tail.size();++i)
             {
                 Train t = tail.get(i);
-                Iterator<Platform> iterator = platformHeap.iterator();
-                while(iterator.hasNext())
+
+                for(Platform p : platformList)
                 {
-                    Platform p = iterator.next();
                     if(p.getId()==t.getPlatformId()&&p.getF()==0)
                     {
-                        iterator.remove();
                         p.setNextFree(LocalTime.of(0,0));
-                        platformHeap.add(p);
                         t.setPlatformId(0);
                         break;
                     }
                 }
             }
-            for(Platform p: platformHeap)
+
+            for(Platform p: platformList)
             {
                 p.setF(0);
             }
+
             for(int i = 0;i<tail.size();++i)
             {
-                Platform p = platformHeap.peek();
-                Train t = tail.get(i);
-                if(!p.getNextFree().isAfter(t.getArrivalTime()))
-                {
-                    platformHeap.poll();
-                    p.setNextFree(t.getDepartureTime());
-                    t.setPlatformId(p.getId());
-                    platformHeap.add(p);
+                Train train = tail.get(i);
+
+                for(int j = 0; j <platformList.size(); j++){
+                    if(!platformList.get(j).getNextFree().isAfter(train.getArrivalTime())){
+                        train.setPlatformId(platformList.get(j).getId());
+                        platformList.get(j).setNextFree(train.getDepartureTime());
+                        break;
+                    }
                 }
+
             }
 
         }
@@ -177,14 +179,14 @@ public class Models {
         for(int i = 0; i<processedList.size();++i)
         {
             Train t = processedList.get(i);
-            Iterator<Platform> iterator = platformHeap.iterator();
-            while (iterator.hasNext()) {
-                Platform p = iterator.next();
+
+            for(Platform p : platformList){
+
                 if (p.getId() == t.getPlatformId()) {
-                    iterator.remove();
+
                     p.setNextFree(t.getDepartureTime());
                     p.setF(1);
-                    platformHeap.add(p);
+
                     break;
                 }
             }
@@ -192,29 +194,23 @@ public class Models {
         for(int i = 0;i<head.size();++i)
         {
             Train t = head.get(i);
-            Iterator<Platform> iterator = platformHeap.iterator();
-            while(iterator.hasNext())
+
+            for(Platform p : platformList)
             {
-                Platform p =  iterator.next();
                 if(p.getId()==t.getPlatformId())
                 {
-                    iterator.remove();
                     p.setNextFree(t.getDepartureTime());
-                    platformHeap.add(p);
                     p.setF(1);
                     break;
                 }
             }
         }
-        Iterator<Platform> it = platformHeap.iterator();
-        while(it.hasNext())
+
+        for (Platform p : platformList)
         {
-            Platform p =  it.next();
             if(p.getId()==plat_id && p.getF()==0)
             {
-                it.remove();
                 p.setNextFree(LocalTime.of(0,0));
-                platformHeap.add(p);
                 break;
             }
         }
@@ -222,34 +218,31 @@ public class Models {
         for(int i = 0;i<tail.size();++i)
         {
             Train t = tail.get(i);
-            Iterator<Platform> iterator = platformHeap.iterator();
-            while(iterator.hasNext())
+
+            for (Platform p : platformList)
             {
-                Platform p = iterator.next();
                 if(p.getId()==t.getPlatformId()&&p.getF()==0)
                 {
-                    iterator.remove();
                     p.setNextFree(LocalTime.of(0,0));
-                    platformHeap.add(p);
                     t.setPlatformId(0);
                     break;
                 }
             }
         }
-        for(Platform p: platformHeap)
+        for(Platform p: platformList)
         {
             p.setF(0);
         }
         for(int i = 0;i<tail.size();++i)
         {
-            Platform p = platformHeap.peek();
-            Train t = tail.get(i);
-            if(!p.getNextFree().isAfter(t.getArrivalTime()))
-            {
-                platformHeap.poll();
-                p.setNextFree(t.getDepartureTime());
-                t.setPlatformId(p.getId());
-                platformHeap.add(p);
+            Train train = tail.get(i);
+
+            for(int j = 0; j <platformList.size(); j++){
+                if(!platformList.get(j).getNextFree().isAfter(train.getArrivalTime())){
+                    train.setPlatformId(platformList.get(j).getId());
+                    platformList.get(j).setNextFree(train.getDepartureTime());
+                    break;
+                }
             }
         }
 

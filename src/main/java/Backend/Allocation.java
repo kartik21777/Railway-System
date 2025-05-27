@@ -62,7 +62,7 @@ public class Allocation {
         for(int i = 0;i<waitingList.size();++i)
         {
             Train train = waitingList.get(i);
-            if(platform.getNextFree().isBefore(train.getArrivalTime())&&train.getPlatformId()==0)
+            if(!platform.getNextFree().isAfter(train.getArrivalTime())&&train.getPlatformId()==0)
             {
                 platform.setNextFree(train.getDepartureTime());
                 train.setPlatformId(platform.getId());
