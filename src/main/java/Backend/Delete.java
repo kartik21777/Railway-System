@@ -9,7 +9,7 @@ import static Backend.Models.*;
 public class Delete {
     public static Platform deletePlatform(Platform plat){
         int f = 0;
-        if(platformHeap.size()==0)
+        if(platformList.size()==0)
         {
             System.out.println("No platform available");
             return null;
@@ -19,7 +19,7 @@ public class Delete {
             Train t = processedList.get(i);
             if(t.getPlatformId()==plat.getId())
             {
-                platformHeap.remove(plat);
+                platformList.remove(plat);
                 plat.setNextFree(t.getDepartureTime());
                 f++;
                 break;
@@ -27,7 +27,7 @@ public class Delete {
         }
         if(f==0)
         {
-            platformHeap.remove(plat);
+            platformList.remove(plat);
             plat.setNextFree(LocalTime.of(0,0));
         }
         for(int i = 0;i<waitingList.size();++i) {

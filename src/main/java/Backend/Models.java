@@ -8,17 +8,12 @@ import application.Train;
 
 public class Models {
     public static int MIN;
-    public static PriorityQueue<Platform> platformHeap;
     public static List<Train> waitingList;
     public static List<Train> processedList;
     public static List<Platform> platformList;
     public static int MAX;
 
     static {
-        platformHeap = new PriorityQueue<>(
-                Comparator.comparing(Platform::getNextFree)
-                        .thenComparing(Platform::getId)
-        );
         waitingList = new ArrayList<>();
         processedList = new ArrayList<>();
         platformList = new ArrayList<>();
