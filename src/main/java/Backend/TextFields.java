@@ -81,7 +81,7 @@ public class TextFields implements ActionListener{
                 System.out.println();
             }
 
-            for (Platform platform : Models.platformHeap) {
+            for (Platform platform : Models.platformList) {
 //                if(simulatedTime.equals(train.getArrivalTime()))
 //                    System.out.println(train.getName() + " arrived"+" Platform:" + train.getPlatformId());
 //                if(simulatedTime.equals(train.getDepartureTime()))
@@ -104,7 +104,7 @@ public class TextFields implements ActionListener{
         if(e.getSource()==deletePlat){
             int id=Integer.parseInt(t1.getText());
             Platform platform=null;
-            for(Platform p1 : Models.platformHeap){
+            for(Platform p1 : Models.platformList){
                 if(id==p1.getId())
                     platform=p1;
             }
